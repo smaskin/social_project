@@ -1,5 +1,4 @@
 .idea
-mysql
 logs
 *.ini
 .vagrant

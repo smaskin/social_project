@@ -1,0 +1,18 @@
+- name: Master configuration
+  template:
+    src: master.cnf
+    dest: /etc/mysql/conf.d
+  notify:
+  - restart mysql
+
+- name: Copy master files
+  template:
+    src: master.sql
+    dest: /tmp/master.sql
+
+- name: Import master sql files
+  mysql_db:
+    state: import
+    name: all
+    target: "/tmp/master.sql"
+

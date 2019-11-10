@@ -1,0 +1,45 @@
+---
+- name: Install apt packages for mysql
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - mysql-server
+    - python3-mysqldb
+    state: latest
+  tags: apt
+
+- name: Init data
+  copy:
+    src: "../init_data/{{ item }}"
+    dest: "/tmp/{{ item }}"
+  with_items:
+    - init.sql
+    - user.sql
+
+- name: Import sql files
+  mysql_db:
+    state: import
+    name: all
+    target: "/tmp/{{ item }}"
+  with_items:
+    - init.sql
+    - user.sql
+  notify:
+  - restart mysql
+
+- name: Delete default ip binding
+  lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    state: absent
+    regexp: '^bind-address'
+
+- name: Restart mysql
+  service: name=mysql state=restarted
+  tags: mysql_restart
+
+- include: master.yml
+  when: "'web' in group_names"
+
+- include: slave.yml
+  when: "'replica' in group_names"

@@ -1,0 +1,5 @@
+[mysqld]
+bind-address=0.0.0.0
+server-id=2
+general_log_file = /var/log/mysql/mysql.log
+general_log = 1

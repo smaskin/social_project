@@ -1,0 +1,17 @@
+- name: Slave configuration
+  template:
+    src: slave.cnf
+    dest: /etc/mysql/conf.d
+  notify:
+  - restart mysql
+
+- name: Copy slave files
+  template:
+    src: slave.sql
+    dest: /tmp/slave.sql
+
+- name: Import slave sql files
+  mysql_db:
+    state: import
+    name: all
+    target: "/tmp/slave.sql"
