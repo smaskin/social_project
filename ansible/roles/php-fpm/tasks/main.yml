@@ -1,0 +1,21 @@
+---
+- name: Install apt php-fpm
+  apt:
+    name: "{{ php_packages }}"
+    state: latest
+    update_cache: yes
+  tags: php
+  notify:
+  - restart php
+
+- name: Php configuration
+  template:
+    src: php.ini
+    dest: /etc/php/7.2/fpm
+  tags: php
+  notify:
+  - restart php
+
+- name: Restart php
+  service: name=php7.2-fpm state=restarted
+  tags: php_restart

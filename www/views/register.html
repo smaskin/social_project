@@ -1,0 +1,39 @@
+<?
+/* @var $model RegisterForm */
+?>
+<div class="wrapper">
+	<h2>Sign Up</h2>
+	<p>Please fill this form to create an account.</p>
+	<form method="post">
+		<div class="form-group <?= $model->confirm_name_err ? 'has-error' : '' ?>">
+			<label>Name</label>
+			<input type="text" name="name" class="form-control" value="<?= $model->name ?>">
+			<span class="help-block"><?= $model->confirm_name_err ?></span>
+		</div>
+		<div class="form-group <?= $model->confirm_surname_err ? 'has-error' : '' ?>">
+			<label>Surname</label>
+			<input type="text" name="surname" class="form-control" value="<?= $model->surname ?>">
+			<span class="help-block"><?= $model->confirm_surname_err ?></span>
+		</div>
+		<div class="form-group <?= $model->email_err ? 'has-error' : '' ?>">
+			<label>Email</label>
+			<input type="text" name="email" class="form-control" value="<?= $model->email ?>">
+			<span class="help-block"><?= $model->email_err ?></span>
+		</div>
+		<div class="form-group <?= $model->password_err ? 'has-error' : ''; ?>">
+			<label>Password</label>
+			<input type="password" name="password" class="form-control" value="<?= $model->password ?>">
+			<span class="help-block"><?= $model->password_err ?></span>
+		</div>
+		<div class="form-group <?= $model->confirm_password_err ? 'has-error' : '' ?>">
+			<label>Confirm Password</label>
+			<input type="password" name="confirm_password" class="form-control" value="<?= $model->confirm_password ?>">
+			<span class="help-block"><?= $model->confirm_password_err ?></span>
+		</div>
+		<div class="form-group">
+			<input type="submit" class="btn btn-primary" value="Submit">
+			<input type="reset" class="btn btn-default" value="Reset">
+		</div>
+		<p>Already have an account? <a href="login.php">Login here</a>.</p>
+	</form>
+</div>

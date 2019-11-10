@@ -1,0 +1,26 @@
+DESCRIBE SELECT id, name, surname FROM user WHERE name LIKE 'ле%' OR surname LIKE 'ле%' LIMIT 20;
+
++----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows   | filtered | Extra       |
++----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+|  1 | SIMPLE      | user  | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 720537 |    20.99 | Using where |
++----+-------------+-------+------------+------+---------------+------+---------+------+--------+----------+-------------+
+
+CREATE INDEX by_name ON user (name);
+CREATE INDEX by_surname ON user (surname);
+
++----+-------------+-------+------------+-------------+--------------------+--------------------+---------+------+-------+----------+---------------------------------------------------+
+| id | select_type | table | partitions | type        | possible_keys      | key                | key_len | ref  | rows  | filtered | Extra                                             |
++----+-------------+-------+------------+-------------+--------------------+--------------------+---------+------+-------+----------+---------------------------------------------------+
+|  1 | SIMPLE      | user  | NULL       | index_merge | by_name,by_surname | by_name,by_surname | 767,767 | NULL | 29282 |   100.00 | Using sort_union(by_name,by_surname); Using where |
++----+-------------+-------+------------+-------------+--------------------+--------------------+---------+------+-------+----------+---------------------------------------------------+
+
+DESCRIBE SELECT id, name, surname FROM user WHERE name LIKE 'ле%' UNION SELECT id, name, surname FROM user WHERE surname LIKE 'ле%' LIMIT 20;
+
++----+--------------+------------+------------+-------+---------------+------------+---------+------+-------+----------+-----------------------+
+| id | select_type  | table      | partitions | type  | possible_keys | key        | key_len | ref  | rows  | filtered | Extra                 |
++----+--------------+------------+------------+-------+---------------+------------+---------+------+-------+----------+-----------------------+
+|  1 | PRIMARY      | user       | NULL       | range | by_name       | by_name    | 767     | NULL | 13170 |   100.00 | Using index condition |
+|  2 | UNION        | user       | NULL       | range | by_surname    | by_surname | 767     | NULL | 16112 |   100.00 | Using index condition |
+| NULL | UNION RESULT | <union1,2> | NULL       | ALL   | NULL          | NULL       | NULL    | NULL |  NULL |     NULL | Using temporary       |
++----+--------------+------------+------------+-------+---------------+------------+---------+------+-------+----------+-----------------------+

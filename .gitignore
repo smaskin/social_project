@@ -1,0 +1,6 @@
+.idea
+mysql
+logs
+*.ini
+.vagrant
+data

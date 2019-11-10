@@ -1,0 +1,27 @@
+---
+- name: Uninstall apt apache2
+  apt:
+    name: apache2
+    state: absent
+  tags: nginx
+
+- name: Install apt nginx
+  apt:
+    name: nginx
+    state: latest
+  tags: nginx
+  notify:
+  - restart nginx
+
+- name: Nginx configuration
+  template:
+    src: default
+    dest: /etc/nginx/sites-available/default
+  tags: nginx
+  notify:
+  - restart nginx
+
+- name: Restart nginx
+  service: name=nginx state=restarted
+  tags: nginx_restart
+

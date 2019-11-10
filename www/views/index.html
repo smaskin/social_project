@@ -1,0 +1,28 @@
+<?
+/* @var $model User */
+/* @var $userProvider UserProvider */
+?>
+<div class="wrapper">
+	<div class="page-header">
+		<h1>Hi, <b><?= $model->email ?></b>. Welcome to our site.</h1>
+	</div>
+	<p>
+		<a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
+		<a href="logout.php" class="btn btn-danger">Sign Out of Your Account</a>
+	</p>
+	<form method="get">
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+				<span class="input-group-text" id="basic-addon1">@</span>
+			</div>
+			<input type="text" class="form-control" placeholder="Search" aria-label="Search" name="query" value="<?= $userProvider->query ?>"  aria-describedby="basic-addon1">
+		</div>
+	</form>
+	<ul class="list-group">
+		<? foreach ((array)$userProvider->search() as $model) : ?>
+			<li  class="list-group-item">
+				<span class="glyphicon glyphicon-th-user"></span> <?= $model['name'] ?> <?= $model['surname'] ?> <span class="badge badge-secondary">#<?= $model['id'] ?></span>
+			</li>
+		<? endforeach ?>
+	</ul>
+</div>
