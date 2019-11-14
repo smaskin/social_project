@@ -2,14 +2,15 @@
 
 define('DB_SERVER', 'master');
 define('DB_SLAVE_SERVER', 'slave');
+define('DB_SERF_SERVER', 'serf');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', 'test');
 define('DB_NAME', 'social');
 
-$slaveFlag = strlen($_GET['query']) > 4;
-$db = ($slaveFlag)
-	? new mysqli(DB_SLAVE_SERVER, DB_USERNAME , DB_PASSWORD, DB_NAME)
-	: new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+$slaveFlag = strlen($_GET['query']) > 2;
+$serfFlag = strlen($_GET['query']) > 4;
+$server = $serfFlag ? DB_SERF_SERVER : ($slaveFlag ? DB_SLAVE_SERVER : DB_SERVER);
+$db = new mysqli($server, DB_USERNAME , DB_PASSWORD, DB_NAME);
 
 mysqli_set_charset($db, "utf8");
 

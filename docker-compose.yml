@@ -5,9 +5,9 @@ services:
     ports:
       - "80:80"
     volumes:
-        - ./www:/var/www
-        - ./etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-        - ./logs/:/var/log/nginx/
+      - ./www:/var/www
+      - ./etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./logs/:/var/log/nginx/
 
   php:
     build: ./images/php
@@ -16,6 +16,8 @@ services:
 
   master:
     image: mysql:5.7
+    command: --innodb_use_native_aio=0
+    user: "1000:50"
     volumes:
       - ./data/mysql-master:/var/lib/mysql
       - ./etc/mysql/conf.d/master.cnf:/etc/mysql/conf.d/master.cnf
@@ -26,9 +28,28 @@ services:
 
   slave:
     image: mysql:5.7
+    command: --innodb_use_native_aio=0
+    user: "1000:50"
     volumes:
       - ./data/mysql-slave:/var/lib/mysql
       - ./etc/mysql/conf.d/slave.cnf:/etc/mysql/conf.d/slave.cnf
+      - ./init_data:/docker-entrypoint-initdb.d
+      - ./promote.sh:/tmp/promote.sh
+    environment:
+      - "MYSQL_DATABASE=social"
+      - "MYSQL_SLAVE_PASSWORD=test"
+      - "MYSQL_MASTER_PASSWORD=test"
+      - "MYSQL_ROOT_PASSWORD=test"
+      - "MYSQL_REPLICATION_USER=repl"
+      - "MYSQL_REPLICATION_PASSWORD=repl"
+
+  serf:
+    image: mysql:5.7
+    command: --innodb_use_native_aio=0
+    user: "1000:50"
+    volumes:
+      - ./data/mysql-serf:/var/lib/mysql
+      - ./etc/mysql/conf.d/serf.cnf:/etc/mysql/conf.d/serf.cnf
       - ./init_data:/docker-entrypoint-initdb.d
     environment:
       MYSQL_DATABASE: social
