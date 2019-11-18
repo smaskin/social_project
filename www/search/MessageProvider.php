@@ -22,7 +22,7 @@ class MessageProvider
 	public function search()
 	{
 		$user = $this->user->id;
-		if ($user && ($stmt = $this->db->prepare("SELECT sender, text FROM message WHERE sender=? OR recipient=? LIMIT 20"))) {
+		if ($user && ($stmt = $this->db->prepare("SELECT sender, text FROM social_message.message WHERE sender=? OR recipient=? LIMIT 20"))) {
 			$stmt->bind_param("ss", $user, $user);
 			if (!$stmt->execute()) {
 				$this->query_err = "Oops! Something went wrong. Please try again later.";

@@ -9,7 +9,7 @@ class MessageForm
 	{
 		$this->text = trim($_POST["text"]);
 		$this->recipient = (int)$_POST["recipient"];
-		$sql = "INSERT INTO message (sender, recipient, text) VALUES (?, ?, ?)";
+		$sql = "INSERT INTO social_message.message (sender, recipient, text) VALUES (?, ?, ?)";
 		if($stmt = mysqli_prepare($db, $sql)){
 			mysqli_stmt_bind_param($stmt, "sss", $param_sender, $param_recipient, $param_text);
 			$param_sender = $user->id;
