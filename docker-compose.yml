@@ -18,6 +18,8 @@ services:
     image: mysql:5.7
     command: --innodb_use_native_aio=0
     user: "1000:50"
+    ports:
+      - "3306:3306"
     volumes:
       - ./data/mysql-master:/var/lib/mysql
       - ./etc/mysql/conf.d/master.cnf:/etc/mysql/conf.d/master.cnf

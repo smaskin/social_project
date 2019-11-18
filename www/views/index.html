@@ -2,27 +2,58 @@
 /* @var $model User */
 /* @var $userProvider UserProvider */
 ?>
+<script>
+	let reloadMessages = async () => {
+		let response = await fetch('/message.php');
+		if (response.ok) {
+			document.getElementById("messages").innerHTML = await response.text();
+		} else {
+			alert("Ошибка HTTP: " + response.status);
+		}
+	};
+	let sendMessage = async (form) => {
+		event.preventDefault();
+		let response = await fetch('/message.php', { method: 'POST', body: new FormData(form) });
+		if (response.ok) {
+			reloadMessages();
+		} else {
+			alert("Ошибка HTTP: " + response.status);
+		}
+	};
+	reloadMessages();
+</script>
 <div class="wrapper">
-	<div class="page-header">
-		<h1>Hi, <b><?= $model->email ?></b>. Welcome to our site.</h1>
-	</div>
-	<p>
-		<a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
-		<a href="logout.php" class="btn btn-danger">Sign Out of Your Account</a>
-	</p>
-	<form method="get">
-		<div class="input-group mb-3">
-			<div class="input-group-prepend">
-				<span class="input-group-text" id="basic-addon1">@</span>
+	<div class="row">
+		<div class="col-sm-8">
+			<div class="page-header">
+				<h1>Hi, <b><?= $model->email ?></b>. Welcome to our site.</h1>
 			</div>
-			<input type="text" class="form-control" placeholder="Search" aria-label="Search" name="query" value="<?= $userProvider->query ?>"  aria-describedby="basic-addon1">
+			<p>
+				<a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
+				<a href="logout.php" class="btn btn-danger">Sign Out of Your Account</a>
+			</p>
+			<form method="get">
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">@</span>
+					</div>
+					<input type="text" class="form-control" placeholder="Search" aria-label="Search" name="query" value="<?= $userProvider->query ?>"  aria-describedby="basic-addon1">
+				</div>
+			</form>
+			<ul class="list-group">
+				<? foreach ((array)$userProvider->search() as $model) : ?>
+					<li class="list-group-item">
+						<form action="" onsubmit="sendMessage(this)" method="post">
+						<div class="form-group">
+							<label for="username"><?= $model['name'] ?> <?= $model['surname'] ?> <span class="badge badge-secondary">#<?= $model['id'] ?></label>
+							<input type="hidden" name="recipient" value="<?= $model['id'] ?>">
+							<input type="text" name="text" class="form-control" placeholder="Send message">
+						</div>
+						</form>
+					</li>
+				<? endforeach ?>
+			</ul>
 		</div>
-	</form>
-	<ul class="list-group">
-		<? foreach ((array)$userProvider->search() as $model) : ?>
-			<li  class="list-group-item">
-				<span class="glyphicon glyphicon-th-user"></span> <?= $model['name'] ?> <?= $model['surname'] ?> <span class="badge badge-secondary">#<?= $model['id'] ?></span>
-			</li>
-		<? endforeach ?>
-	</ul>
+		<div id="messages" class="col-sm-4"></div>
+	</div>
 </div>

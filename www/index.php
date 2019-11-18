@@ -1,7 +1,7 @@
 <?
 
 require_once "config.php";
-require_once "models/User.php";
+require_once "entities/User.php";
 require_once "search/UserProvider.php";
 
 session_start();

@@ -1,0 +1,14 @@
+<?
+/* @var $model User */
+/* @var $messageProvider MessageProvider */
+?>
+<ul class="list-group">
+	<? foreach ((array)$messageProvider->search() as $model) : ?>
+		<li  class="list-group-item">
+			<span class="glyphicon glyphicon-th-user"></span> <?= $model['text'] ?>
+			<? if ($model['sender'] != $user->id): ?>
+				<span class="badge badge-secondary">#<?= $model['sender'] ?></span>
+			<? endif ?>
+		</li>
+	<? endforeach ?>
+</ul>

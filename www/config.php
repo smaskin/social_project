@@ -21,7 +21,12 @@ if (mysqli_connect_errno()) {
 
 function render($template, $params = [])
 {
-	return renderPhpFile('layout', ['content' => renderPhpFile($template, $params)]);
+	return renderPhpFile('layout', ['content' => renderPartial($template, $params)]);
+}
+
+function renderPartial($template, $params = [])
+{
+	return renderPhpFile($template, $params);
 }
 
 function renderPhpFile($template, $params)
